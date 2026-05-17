@@ -44,3 +44,10 @@ id_juego,titulo,genero,plataforma,pegi,precio,desarrolladora,tipo
 43,Final Fantasy XVI,RPG,PS5,18,69.99,Square Enix,Singleplayer
 44,Helldivers 2,Shooter,PS5,18,39.99,Arrowhead Game Studios,Multiplayer
 45,No Man's Sky,Aventura,PC,7,29.99,Hello Games,Multiplayer
+46,Overwatch 2,Shooter,PC,12,0.00,Blizzard Entertainment,Multiplayer
+47,Team Fortress 2,Shooter,PC,12,0.00,Valve,Multiplayer
+48,Paladins,Shooter,PC,12,0.00,Hi-Rez Studios,Multiplayer
+49,Warframe,Accion,PC,12,0.00,Digital Extremes,Multiplayer
+50,Brawlhalla,Lucha,PC,7,0.00,Blue Mammoth Games,Multiplayer
+51,Destiny 2,Shooter,PC,16,0.00,Bungie,Multiplayer
+52,Counter-Strike 2,Shooter,PC,18,0.00,Valve,Multiplayer

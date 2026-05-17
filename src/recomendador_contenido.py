@@ -1,3 +1,6 @@
+from motor_prolog import MotorProlog
+
+
 def obtener_juegos_valorados_por_usuario(valoraciones, id_usuario):
     """
     Devuelve una lista con los IDs de los juegos que el usuario ya ha valorado.
@@ -28,7 +31,6 @@ def calcular_puntuacion_juego(juego, usuario):
     if juego["pegi"] <= usuario["edad"]:
         puntuacion += 2
 
-    # Bonificación para juegos gratuitos o baratos
     if juego["precio"] == 0:
         puntuacion += 1
     elif juego["precio"] <= usuario["presupuesto_max"] * 0.5:
@@ -40,14 +42,7 @@ def calcular_puntuacion_juego(juego, usuario):
 def recomendar_por_contenido(juegos, usuarios, valoraciones, id_usuario, limite=5):
     """
     Recomienda videojuegos según las características del usuario y de los juegos.
-
-    Este recomendador tiene en cuenta:
-    - plataforma del usuario
-    - edad y PEGI
-    - presupuesto
-    - género favorito
-    - tipo de juego preferido
-    - juegos ya valorados
+    Después valida cada recomendación con reglas Prolog.
     """
 
     usuario = usuarios[usuarios["id_usuario"] == id_usuario]
@@ -74,7 +69,6 @@ def recomendar_por_contenido(juegos, usuarios, valoraciones, id_usuario, limite=
         axis=1
     )
 
-    # Evita recomendar juegos demasiado poco relacionados
     candidatos = candidatos[candidatos["puntuacion"] >= 7]
 
     if candidatos.empty:
@@ -85,9 +79,17 @@ def recomendar_por_contenido(juegos, usuarios, valoraciones, id_usuario, limite=
         ascending=[False, True]
     )
 
-    recomendaciones = candidatos.head(limite)
+    motor_prolog = MotorProlog()
+    recomendaciones_validas = []
 
-    return recomendaciones.to_dict("records")
+    for _, juego in candidatos.iterrows():
+        if motor_prolog.recomendacion_valida(usuario, juego):
+            recomendaciones_validas.append(juego.to_dict())
+
+        if len(recomendaciones_validas) >= limite:
+            break
+
+    return recomendaciones_validas
 
 
 def generar_motivo_recomendacion(juego, usuario):
@@ -114,7 +116,6 @@ def generar_motivo_recomendacion(juego, usuario):
     if juego["precio"] == 0:
         motivos.append("es gratuito")
 
-    if motivos:
-        return "Recomendado porque " + ", ".join(motivos) + "."
+    motivos.append("ha sido validado por reglas Prolog")
 
-    return "Recomendado por similitud con tus preferencias."
+    return "Recomendado porque " + ", ".join(motivos) + "."
