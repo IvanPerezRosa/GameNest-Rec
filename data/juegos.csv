@@ -1,0 +1,46 @@
+id_juego,titulo,genero,plataforma,pegi,precio,desarrolladora,tipo
+1,Elden Ring,RPG,PC,16,59.99,FromSoftware,Singleplayer
+2,Cyberpunk 2077,RPG,PC,18,49.99,CD Projekt RED,Singleplayer
+3,The Witcher 3,RPG,PC,18,39.99,CD Projekt RED,Singleplayer
+4,Baldur's Gate 3,RPG,PC,18,59.99,Larian Studios,Singleplayer
+5,Minecraft,Sandbox,PC,7,29.99,Mojang,Multiplayer
+6,Valorant,Shooter,PC,16,0.00,Riot Games,Multiplayer
+7,League of Legends,MOBA,PC,12,0.00,Riot Games,Multiplayer
+8,Stardew Valley,Simulacion,PC,7,14.99,ConcernedApe,Singleplayer
+9,Hades,Roguelike,PC,12,24.99,Supergiant Games,Singleplayer
+10,Red Dead Redemption 2,Aventura,PC,18,59.99,Rockstar Games,Singleplayer
+11,God of War,Accion,PS5,18,69.99,Santa Monica Studio,Singleplayer
+12,Marvel's Spider-Man 2,Accion,PS5,16,69.99,Insomniac Games,Singleplayer
+13,Gran Turismo 7,Conduccion,PS5,3,69.99,Polyphony Digital,Multiplayer
+14,FIFA 25,Deportes,PS5,3,69.99,EA Sports,Multiplayer
+15,The Last of Us Part II,Aventura,PS5,18,49.99,Naughty Dog,Singleplayer
+16,Zelda Breath of the Wild,Aventura,Switch,12,59.99,Nintendo,Singleplayer
+17,Zelda Tears of the Kingdom,Aventura,Switch,12,69.99,Nintendo,Singleplayer
+18,Animal Crossing,Simulacion,Switch,3,59.99,Nintendo,Singleplayer
+19,Mario Kart 8 Deluxe,Conduccion,Switch,3,49.99,Nintendo,Multiplayer
+20,Super Smash Bros Ultimate,Lucha,Switch,12,59.99,Nintendo,Multiplayer
+21,Fortnite,Battle Royale,PC,12,0.00,Epic Games,Multiplayer
+22,Apex Legends,Shooter,PC,16,0.00,Respawn Entertainment,Multiplayer
+23,Dark Souls 3,RPG,PC,16,39.99,FromSoftware,Singleplayer
+24,Resident Evil 4 Remake,Terror,PC,18,59.99,Capcom,Singleplayer
+25,Hollow Knight,Metroidvania,PC,7,14.99,Team Cherry,Singleplayer
+26,NBA 2K25,Deportes,PS5,3,69.99,Visual Concepts,Multiplayer
+27,EA Sports FC 24,Deportes,PS5,3,39.99,EA Sports,Multiplayer
+28,Rocket League,Deportes,PS5,3,0.00,Psyonix,Multiplayer
+29,Street Fighter 6,Lucha,PS5,12,59.99,Capcom,Multiplayer
+30,Hogwarts Legacy,Aventura,PS5,12,59.99,Avalanche Software,Singleplayer
+31,Astro Bot,Plataformas,PS5,7,59.99,Team Asobi,Singleplayer
+32,Ratchet & Clank Rift Apart,Accion,PS5,7,49.99,Insomniac Games,Singleplayer
+33,Dragon Age Inquisition,RPG,PC,18,39.99,BioWare,Singleplayer
+34,Mass Effect Legendary Edition,RPG,PC,18,59.99,BioWare,Singleplayer
+35,Disco Elysium,RPG,PC,18,39.99,ZA/UM,Singleplayer
+36,Divinity Original Sin 2,RPG,PC,16,44.99,Larian Studios,Singleplayer
+37,Monster Hunter World,RPG,PC,16,29.99,Capcom,Multiplayer
+38,Persona 5 Royal,RPG,PC,16,59.99,Atlus,Singleplayer
+39,Splatoon 3,Shooter,Switch,7,49.99,Nintendo,Multiplayer
+40,Super Mario Odyssey,Plataformas,Switch,7,49.99,Nintendo,Singleplayer
+41,Kirby and the Forgotten Land,Plataformas,Switch,7,49.99,Nintendo,Singleplayer
+42,Metroid Dread,Metroidvania,Switch,12,39.99,Nintendo,Singleplayer
+43,Final Fantasy XVI,RPG,PS5,18,69.99,Square Enix,Singleplayer
+44,Helldivers 2,Shooter,PS5,18,39.99,Arrowhead Game Studios,Multiplayer
+45,No Man's Sky,Aventura,PC,7,29.99,Hello Games,Multiplayer

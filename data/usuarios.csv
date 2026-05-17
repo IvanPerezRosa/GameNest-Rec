@@ -1,0 +1,9 @@
+id_usuario,nombre,edad,plataforma_preferida,presupuesto_max,genero_preferido,tipo_preferido
+1,Ivan,21,PC,60,RPG,Singleplayer
+2,Ana,17,PS5,70,Deportes,Multiplayer
+3,Carlos,15,PC,30,Shooter,Multiplayer
+4,Laura,23,Switch,60,Aventura,Singleplayer
+5,Marcos,19,PC,20,Simulacion,Singleplayer
+6,Sofia,14,Switch,50,Conduccion,Multiplayer
+7,David,25,PS5,70,Accion,Singleplayer
+8,Lucia,16,PC,0,Battle Royale,Multiplayer
