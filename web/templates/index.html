@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>GameNest</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">GameNest</div>
+
+        <div class="nav-links">
+            {% if usuario %}
+                <a href="{{ url_for('perfil') }}">Mi perfil</a>
+                <a href="{{ url_for('recomendaciones') }}">Recomendaciones</a>
+                <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Iniciar sesión</a>
+                <a href="{{ url_for('registro') }}">Crear cuenta</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="container">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <section class="messages">
+                    {% for category, message in messages %}
+                        <div class="message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </section>
+            {% endif %}
+        {% endwith %}
+
+        <section class="hero">
+            <img src="{{ url_for('static', filename='img/logo_gamenest.png') }}" alt="Logo GameNest" class="logo">
+
+            <h1>GameNest</h1>
+            <p class="subtitle">Motor de Recomendación Personalizado de Videojuegos</p>
+
+            <p class="description">
+                Crea una cuenta, configura tus gustos y recibe recomendaciones personalizadas
+                usando Python, Prolog y técnicas de Big Data.
+            </p>
+
+            <div class="actions">
+                {% if usuario %}
+                    <a href="{{ url_for('perfil') }}" class="btn btn-primary">Ir a mi perfil</a>
+                    <a href="{{ url_for('recomendaciones') }}" class="btn btn-secondary">Ver recomendaciones</a>
+                {% else %}
+                    <a href="{{ url_for('registro') }}" class="btn btn-primary">Crear cuenta</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-secondary">Iniciar sesión</a>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>¿Qué hace GameNest?</h2>
+            <p>
+                GameNest analiza las preferencias del usuario, su edad, plataforma favorita,
+                presupuesto y tipo de juego preferido para recomendar videojuegos adecuados.
+            </p>
+            <p>
+                Además, utiliza reglas Prolog para validar que las recomendaciones sean coherentes,
+                evitando juegos no compatibles con el perfil del usuario.
+            </p>
+        </section>
+    </main>
+
+</body>
+</html>

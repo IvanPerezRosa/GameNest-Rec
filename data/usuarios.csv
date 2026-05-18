@@ -1,9 +1,2 @@
-id_usuario,nombre,edad,plataforma_preferida,presupuesto_max,genero_preferido,tipo_preferido
-1,Ivan,21,PC,60,RPG,Singleplayer
-2,Ana,17,PS5,70,Deportes,Multiplayer
-3,Carlos,15,PC,30,Shooter,Multiplayer
-4,Laura,23,Switch,60,Aventura,Singleplayer
-5,Marcos,19,PC,20,Simulacion,Singleplayer
-6,Sofia,14,Switch,50,Conduccion,Multiplayer
-7,David,25,PS5,70,Accion,Singleplayer
-8,Lucia,16,PC,0,Battle Royale,Multiplayer
+id_usuario,nombre,username,password_hash,edad,plataforma_preferida,presupuesto_max,genero_preferido,tipo_preferido
+1,Ivan,parz1val,scrypt:32768:8:1$vYxWTQioQ74tWeA3$c44d6c0bac245697fea1827bcb74448357ea2f0fbfcae8f3be50769979dca959942fe70c0cd670a011d320593094a6f001d47d93336c467f17869f0aa642d187,21,PC,100.0,Shooter,Multiplayer
