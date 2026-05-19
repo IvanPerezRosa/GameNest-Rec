@@ -55,20 +55,20 @@
                 <label for="presupuesto_max">Presupuesto máximo (€)</label>
                 <input type="number" id="presupuesto_max" name="presupuesto_max" min="0" step="0.01" required>
 
-                <label for="genero_preferido">Género favorito</label>
-                <select id="genero_preferido" name="genero_preferido" required>
-                    <option value="RPG">RPG</option>
-                    <option value="Shooter">Shooter</option>
-                    <option value="Deportes">Deportes</option>
-                    <option value="Aventura">Aventura</option>
-                    <option value="Accion">Acción</option>
-                    <option value="Simulacion">Simulación</option>
-                    <option value="Conduccion">Conducción</option>
-                    <option value="Battle Royale">Battle Royale</option>
-                    <option value="Plataformas">Plataformas</option>
-                    <option value="Lucha">Lucha</option>
-                    <option value="Metroidvania">Metroidvania</option>
-                </select>
+                <fieldset class="checkbox-fieldset">
+                    <legend>Géneros favoritos</legend>
+
+                    <div class="checkbox-grid">
+                        {% for genero in generos_disponibles %}
+                            <label class="checkbox-card">
+                                <input type="checkbox" name="generos_preferidos" value="{{ genero }}">
+                                <span>{{ genero }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+
+                    <p class="small-text">Selecciona uno o varios géneros.</p>
+                </fieldset>
 
                 <label for="tipo_preferido">Tipo de juego preferido</label>
                 <select id="tipo_preferido" name="tipo_preferido" required>

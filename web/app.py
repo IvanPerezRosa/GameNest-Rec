@@ -22,6 +22,37 @@ app = Flask(__name__)
 app.secret_key = "gamenest_clave_secreta_desarrollo"
 
 
+GENEROS_DISPONIBLES = [
+    "RPG",
+    "Accion",
+    "Aventura",
+    "Shooter",
+    "Deportes",
+    "Simulacion",
+    "Conduccion",
+    "Battle Royale",
+    "Plataformas",
+    "Lucha",
+    "Metroidvania",
+    "Roguelike",
+    "Sandbox",
+    "Mundo abierto",
+    "Terror",
+    "Competitivo",
+    "Exploracion",
+    "Estrategia",
+    "MOBA",
+    "Gestion",
+    "Relax",
+    "Narrativo",
+    "Familiar",
+    "Arcade",
+    "Fantasia",
+    "JRPG",
+    "Cooperativo"
+]
+
+
 def usuario_actual():
     """
     Devuelve el usuario actualmente autenticado.
@@ -49,8 +80,12 @@ def registro():
         edad = request.form["edad"]
         plataforma_preferida = request.form["plataforma_preferida"]
         presupuesto_max = request.form["presupuesto_max"]
-        genero_preferido = request.form["genero_preferido"]
+        generos_preferidos = ";".join(request.form.getlist("generos_preferidos"))
         tipo_preferido = request.form["tipo_preferido"]
+
+        if not generos_preferidos:
+            flash("Debes seleccionar al menos un género.", "error")
+            return redirect(url_for("registro"))
 
         try:
             nuevo_usuario = crear_usuario(
@@ -60,7 +95,7 @@ def registro():
                 edad,
                 plataforma_preferida,
                 presupuesto_max,
-                genero_preferido,
+                generos_preferidos,
                 tipo_preferido
             )
 
@@ -72,7 +107,7 @@ def registro():
             flash(str(error), "error")
             return redirect(url_for("registro"))
 
-    return render_template("registro.html")
+    return render_template("registro.html", generos_disponibles=GENEROS_DISPONIBLES)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -114,13 +149,19 @@ def editar_perfil():
         return redirect(url_for("login"))
 
     if request.method == "POST":
+        generos_preferidos = ";".join(request.form.getlist("generos_preferidos"))
+
+        if not generos_preferidos:
+            flash("Debes seleccionar al menos un género.", "error")
+            return redirect(url_for("editar_perfil"))
+
         usuario_actualizado = actualizar_perfil(
             usuario["id_usuario"],
             request.form["nombre"],
             request.form["edad"],
             request.form["plataforma_preferida"],
             request.form["presupuesto_max"],
-            request.form["genero_preferido"],
+            generos_preferidos,
             request.form["tipo_preferido"]
         )
 
@@ -131,7 +172,16 @@ def editar_perfil():
         flash("Perfil actualizado correctamente.", "success")
         return redirect(url_for("perfil"))
 
-    return render_template("editar_perfil.html", usuario=usuario)
+    generos_usuario = []
+    if usuario.get("generos_preferidos"):
+        generos_usuario = str(usuario["generos_preferidos"]).split(";")
+
+    return render_template(
+        "editar_perfil.html",
+        usuario=usuario,
+        generos_disponibles=GENEROS_DISPONIBLES,
+        generos_usuario=generos_usuario
+    )
 
 
 @app.route("/recomendaciones")

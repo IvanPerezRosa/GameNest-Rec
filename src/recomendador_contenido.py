@@ -1,6 +1,16 @@
 from motor_prolog import MotorProlog
 
 
+def convertir_generos_a_lista(generos):
+    """
+    Convierte una cadena separada por ';' en una lista de géneros.
+    """
+    if not isinstance(generos, str):
+        return []
+
+    return [genero.strip() for genero in generos.split(";") if genero.strip()]
+
+
 def obtener_juegos_valorados_por_usuario(valoraciones, id_usuario):
     """
     Devuelve una lista con los IDs de los juegos que el usuario ya ha valorado.
@@ -9,15 +19,30 @@ def obtener_juegos_valorados_por_usuario(valoraciones, id_usuario):
     return valoraciones_usuario["id_juego"].tolist()
 
 
+def calcular_coincidencias_generos(generos_juego, generos_usuario):
+    """
+    Calcula cuántos géneros coinciden entre un juego y un usuario.
+    """
+    lista_generos_juego = convertir_generos_a_lista(generos_juego)
+    lista_generos_usuario = convertir_generos_a_lista(generos_usuario)
+
+    coincidencias = set(lista_generos_juego).intersection(set(lista_generos_usuario))
+
+    return len(coincidencias)
+
+
 def calcular_puntuacion_juego(juego, usuario):
     """
-    Calcula una puntuación interna para saber cuánto encaja un videojuego
-    con el perfil del usuario.
+    Calcula una puntuación interna según cuánto encaja el juego con el usuario.
     """
     puntuacion = 0
 
-    if juego["genero"] == usuario["genero_preferido"]:
-        puntuacion += 5
+    coincidencias_generos = calcular_coincidencias_generos(
+        juego["generos"],
+        usuario["generos_preferidos"]
+    )
+
+    puntuacion += coincidencias_generos * 4
 
     if juego["tipo"] == usuario["tipo_preferido"]:
         puntuacion += 3
@@ -25,15 +50,15 @@ def calcular_puntuacion_juego(juego, usuario):
     if juego["plataforma"] == usuario["plataforma_preferida"]:
         puntuacion += 3
 
-    if juego["precio"] <= usuario["presupuesto_max"]:
+    if float(juego["precio"]) <= float(usuario["presupuesto_max"]):
         puntuacion += 2
 
-    if juego["pegi"] <= usuario["edad"]:
+    if int(juego["pegi"]) <= int(usuario["edad"]):
         puntuacion += 2
 
-    if juego["precio"] == 0:
+    if float(juego["precio"]) == 0:
         puntuacion += 1
-    elif juego["precio"] <= usuario["presupuesto_max"] * 0.5:
+    elif float(juego["precio"]) <= float(usuario["presupuesto_max"]) * 0.5:
         puntuacion += 1
 
     return puntuacion
@@ -41,8 +66,7 @@ def calcular_puntuacion_juego(juego, usuario):
 
 def recomendar_por_contenido(juegos, usuarios, valoraciones, id_usuario, limite=5):
     """
-    Recomienda videojuegos según las características del usuario y de los juegos.
-    Después valida cada recomendación con reglas Prolog.
+    Recomienda videojuegos permitiendo varios géneros por juego y por usuario.
     """
 
     usuario = usuarios[usuarios["id_usuario"] == id_usuario]
@@ -57,8 +81,8 @@ def recomendar_por_contenido(juegos, usuarios, valoraciones, id_usuario, limite=
     candidatos = juegos[
         (~juegos["id_juego"].isin(juegos_valorados))
         & (juegos["plataforma"] == usuario["plataforma_preferida"])
-        & (juegos["pegi"] <= usuario["edad"])
-        & (juegos["precio"] <= usuario["presupuesto_max"])
+        & (juegos["pegi"] <= int(usuario["edad"]))
+        & (juegos["precio"] <= float(usuario["presupuesto_max"]))
     ].copy()
 
     if candidatos.empty:
@@ -94,12 +118,17 @@ def recomendar_por_contenido(juegos, usuarios, valoraciones, id_usuario, limite=
 
 def generar_motivo_recomendacion(juego, usuario):
     """
-    Genera una explicación sencilla de por qué se recomienda un videojuego.
+    Genera una explicación de por qué se recomienda un videojuego.
     """
     motivos = []
 
-    if juego["genero"] == usuario["genero_preferido"]:
-        motivos.append("coincide con tu género favorito")
+    generos_juego = convertir_generos_a_lista(juego["generos"])
+    generos_usuario = convertir_generos_a_lista(usuario["generos_preferidos"])
+
+    generos_comunes = sorted(set(generos_juego).intersection(set(generos_usuario)))
+
+    if generos_comunes:
+        motivos.append("coincide en los géneros: " + ", ".join(generos_comunes))
 
     if juego["plataforma"] == usuario["plataforma_preferida"]:
         motivos.append("está disponible en tu plataforma preferida")
@@ -107,13 +136,13 @@ def generar_motivo_recomendacion(juego, usuario):
     if juego["tipo"] == usuario["tipo_preferido"]:
         motivos.append("coincide con tu tipo de juego preferido")
 
-    if juego["precio"] <= usuario["presupuesto_max"]:
+    if float(juego["precio"]) <= float(usuario["presupuesto_max"]):
         motivos.append("entra dentro de tu presupuesto")
 
-    if juego["pegi"] <= usuario["edad"]:
+    if int(juego["pegi"]) <= int(usuario["edad"]):
         motivos.append("es adecuado para tu edad según PEGI")
 
-    if juego["precio"] == 0:
+    if float(juego["precio"]) == 0:
         motivos.append("es gratuito")
 
     motivos.append("ha sido validado por reglas Prolog")

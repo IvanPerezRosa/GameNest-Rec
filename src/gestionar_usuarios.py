@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 RUTA_USUARIOS = BASE_DIR / "data" / "usuarios.csv"
+RUTA_VALORACIONES = BASE_DIR / "data" / "valoraciones.csv"
 
 
 COLUMNAS_USUARIOS = [
@@ -15,7 +16,7 @@ COLUMNAS_USUARIOS = [
     "edad",
     "plataforma_preferida",
     "presupuesto_max",
-    "genero_preferido",
+    "generos_preferidos",
     "tipo_preferido"
 ]
 
@@ -23,20 +24,39 @@ COLUMNAS_USUARIOS = [
 def cargar_usuarios():
     """
     Carga el archivo usuarios.csv.
-    Si está vacío o le falta alguna columna, lo normaliza.
+    Si no existe o le faltan columnas, lo normaliza.
+    También evita errores de tipo al guardar varios géneros.
     """
     if not RUTA_USUARIOS.exists():
         usuarios = pd.DataFrame(columns=COLUMNAS_USUARIOS)
         usuarios.to_csv(RUTA_USUARIOS, index=False)
         return usuarios
 
-    usuarios = pd.read_csv(RUTA_USUARIOS)
+    try:
+        usuarios = pd.read_csv(RUTA_USUARIOS, dtype=str)
+    except pd.errors.EmptyDataError:
+        usuarios = pd.DataFrame(columns=COLUMNAS_USUARIOS)
 
     for columna in COLUMNAS_USUARIOS:
         if columna not in usuarios.columns:
             usuarios[columna] = ""
 
     usuarios = usuarios[COLUMNAS_USUARIOS]
+
+    usuarios = usuarios.fillna("")
+
+    if not usuarios.empty:
+        usuarios["id_usuario"] = usuarios["id_usuario"].replace("", "0").astype(int)
+        usuarios["edad"] = usuarios["edad"].replace("", "0").astype(int)
+        usuarios["presupuesto_max"] = usuarios["presupuesto_max"].replace("", "0").astype(float)
+
+        usuarios["nombre"] = usuarios["nombre"].astype(str)
+        usuarios["username"] = usuarios["username"].astype(str)
+        usuarios["password_hash"] = usuarios["password_hash"].astype(str)
+        usuarios["plataforma_preferida"] = usuarios["plataforma_preferida"].astype(str)
+        usuarios["generos_preferidos"] = usuarios["generos_preferidos"].astype(str)
+        usuarios["tipo_preferido"] = usuarios["tipo_preferido"].astype(str)
+
     usuarios.to_csv(RUTA_USUARIOS, index=False)
 
     return usuarios
@@ -44,26 +64,39 @@ def cargar_usuarios():
 
 def guardar_usuarios(usuarios):
     """
-    Guarda el DataFrame de usuarios en el CSV.
+    Guarda los usuarios en el CSV.
     """
+    usuarios = usuarios[COLUMNAS_USUARIOS].copy()
+    usuarios["generos_preferidos"] = usuarios["generos_preferidos"].astype(str)
     usuarios.to_csv(RUTA_USUARIOS, index=False)
 
 
 def obtener_siguiente_id():
     """
-    Obtiene el siguiente ID disponible.
+    Obtiene el siguiente ID disponible teniendo en cuenta usuarios.csv
+    y valoraciones.csv para evitar conflictos con usuarios históricos.
     """
     usuarios = cargar_usuarios()
+    ids = []
 
-    if usuarios.empty:
+    if not usuarios.empty:
+        ids.extend(usuarios["id_usuario"].dropna().astype(int).tolist())
+
+    if RUTA_VALORACIONES.exists():
+        valoraciones = pd.read_csv(RUTA_VALORACIONES)
+
+        if "id_usuario" in valoraciones.columns and not valoraciones.empty:
+            ids.extend(valoraciones["id_usuario"].dropna().astype(int).tolist())
+
+    if not ids:
         return 1
 
-    return int(usuarios["id_usuario"].max()) + 1
+    return max(ids) + 1
 
 
 def existe_username(username):
     """
-    Comprueba si ya existe un nombre de usuario.
+    Comprueba si ya existe un username.
     """
     usuarios = cargar_usuarios()
     username = username.strip().lower()
@@ -75,12 +108,11 @@ def existe_username(username):
 
 
 def crear_usuario(nombre, username, password, edad, plataforma_preferida,
-                  presupuesto_max, genero_preferido, tipo_preferido):
+                  presupuesto_max, generos_preferidos, tipo_preferido):
     """
     Crea una cuenta nueva y guarda la contraseña cifrada.
     """
     usuarios = cargar_usuarios()
-
     username = username.strip().lower()
 
     if existe_username(username):
@@ -94,7 +126,7 @@ def crear_usuario(nombre, username, password, edad, plataforma_preferida,
         "edad": int(edad),
         "plataforma_preferida": plataforma_preferida,
         "presupuesto_max": float(presupuesto_max),
-        "genero_preferido": genero_preferido,
+        "generos_preferidos": str(generos_preferidos),
         "tipo_preferido": tipo_preferido
     }
 
@@ -139,7 +171,7 @@ def obtener_usuario_por_id(id_usuario):
 
 
 def actualizar_perfil(id_usuario, nombre, edad, plataforma_preferida,
-                      presupuesto_max, genero_preferido, tipo_preferido):
+                      presupuesto_max, generos_preferidos, tipo_preferido):
     """
     Actualiza las preferencias del usuario.
     No modifica username ni contraseña.
@@ -153,12 +185,12 @@ def actualizar_perfil(id_usuario, nombre, edad, plataforma_preferida,
 
     i = indice[0]
 
-    usuarios.at[i, "nombre"] = nombre.strip()
-    usuarios.at[i, "edad"] = int(edad)
-    usuarios.at[i, "plataforma_preferida"] = plataforma_preferida
-    usuarios.at[i, "presupuesto_max"] = float(presupuesto_max)
-    usuarios.at[i, "genero_preferido"] = genero_preferido
-    usuarios.at[i, "tipo_preferido"] = tipo_preferido
+    usuarios.loc[i, "nombre"] = nombre.strip()
+    usuarios.loc[i, "edad"] = int(edad)
+    usuarios.loc[i, "plataforma_preferida"] = plataforma_preferida
+    usuarios.loc[i, "presupuesto_max"] = float(presupuesto_max)
+    usuarios.loc[i, "generos_preferidos"] = str(generos_preferidos)
+    usuarios.loc[i, "tipo_preferido"] = tipo_preferido
 
     guardar_usuarios(usuarios)
 
