@@ -22,11 +22,33 @@
 
             <div class="profile-grid">
                 <p><strong>Edad:</strong> {{ usuario.edad }}</p>
-                <p><strong>Plataforma:</strong> {{ usuario.plataforma_preferida }}</p>
+                <p><strong>Plataformas:</strong> {{ usuario.plataformas_preferidas.replace(";", ", ") }}</p>
                 <p><strong>Géneros favoritos:</strong> {{ usuario.generos_preferidos.replace(";", ", ") }}</p>
-                <p><strong>Tipo preferido:</strong> {{ usuario.tipo_preferido }}</p>
+                <p><strong>Tipos preferidos:</strong> {{ usuario.tipos_preferidos.replace(";", ", ") }}</p>
                 <p><strong>Presupuesto máximo:</strong> {{ usuario.presupuesto_max }} €</p>
             </div>
+        </section>
+
+        <section class="card">
+            <h2>¿Cómo se calcula la puntuación interna?</h2>
+
+            <p>
+                La puntuación interna mide cuánto encaja un videojuego con tu perfil.
+                Cuanto mayor sea la puntuación, más relación tiene el juego con tus preferencias.
+            </p>
+
+            <ul class="score-list">
+                <li><strong>+4 puntos</strong> por cada género coincidente.</li>
+                <li><strong>+3 puntos</strong> si la plataforma del juego coincide con alguna de tus plataformas.</li>
+                <li><strong>+3 puntos</strong> si el tipo de juego coincide con tus preferencias.</li>
+                <li><strong>+2 puntos</strong> si el precio entra dentro de tu presupuesto.</li>
+                <li><strong>+2 puntos</strong> si el PEGI es adecuado para tu edad.</li>
+                <li><strong>+1 punto</strong> si el juego es gratuito o cuesta menos de la mitad de tu presupuesto.</li>
+                <li>
+                    Además, las recomendaciones pasan por reglas Prolog para validar edad,
+                    plataforma, presupuesto y tipo de juego.
+                </li>
+            </ul>
         </section>
 
         {% if recomendaciones %}
@@ -34,6 +56,11 @@
                 {% for juego in recomendaciones %}
                     <article class="game-card">
                         <h2>{{ juego.titulo }}</h2>
+                        {% if juego.tipo_recomendacion == "Alternativa" %}
+                            <span class="badge-alternative">Recomendación alternativa</span>
+                        {% else %}
+                            <span class="badge-main">Recomendación principal</span>
+                        {% endif %}
 
                         <p><strong>Géneros:</strong> {{ juego.generos.replace(";", ", ") }}</p>
                         <p><strong>Plataforma:</strong> {{ juego.plataforma }}</p>
@@ -42,8 +69,16 @@
                         <p><strong>Desarrolladora:</strong> {{ juego.desarrolladora }}</p>
                         <p><strong>Tipo:</strong> {{ juego.tipo }}</p>
                         <p><strong>Puntuación interna:</strong> {{ juego.puntuacion }}</p>
-
-                        <p class="reason">{{ juego.motivo }}</p>
+                            {% if juego.desglose_puntuacion %}
+                                <div class="score-detail">
+                                    <strong>Desglose de puntuación:</strong>
+                                    <ul>
+                                    {% for item in juego.desglose_puntuacion %}
+                                        <li>{{ item }}</li>
+                                    {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
                     </article>
                 {% endfor %}
             </section>

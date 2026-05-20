@@ -1,18 +1,18 @@
 % reglas.pl
 % Motor de reglas de GameNest
 
-% Una recomendación es válida si cumple las reglas principales:
+% Una recomendación es válida si cumple:
 % - edad suficiente según PEGI
 % - plataforma compatible
 % - precio dentro del presupuesto
 % - tipo de juego compatible
 
-recomendacion_valida(EdadUsuario, PlataformaUsuario, PresupuestoUsuario, TipoUsuario,
+recomendacion_valida(EdadUsuario, PlataformasUsuario, PresupuestoUsuario, TiposUsuario,
                      PegiJuego, PlataformaJuego, PrecioJuego, TipoJuego) :-
     edad_valida(EdadUsuario, PegiJuego),
-    plataforma_valida(PlataformaUsuario, PlataformaJuego),
+    plataforma_valida(PlataformasUsuario, PlataformaJuego),
     presupuesto_valido(PresupuestoUsuario, PrecioJuego),
-    tipo_valido(TipoUsuario, TipoJuego).
+    tipo_valido(TiposUsuario, TipoJuego).
 
 
 % El usuario puede jugar si su edad es igual o superior al PEGI del juego.
@@ -20,16 +20,16 @@ edad_valida(EdadUsuario, PegiJuego) :-
     EdadUsuario >= PegiJuego.
 
 
-% La plataforma del juego debe coincidir con la plataforma preferida del usuario.
-plataforma_valida(PlataformaUsuario, PlataformaJuego) :-
-    PlataformaUsuario == PlataformaJuego.
+% La plataforma del juego debe estar entre las plataformas del usuario.
+plataforma_valida(PlataformasUsuario, PlataformaJuego) :-
+    member(PlataformaJuego, PlataformasUsuario).
 
 
-% El precio del juego debe ser menor o igual que el presupuesto máximo del usuario.
+% El precio del juego debe ser menor o igual que el presupuesto máximo.
 presupuesto_valido(PresupuestoUsuario, PrecioJuego) :-
     PrecioJuego =< PresupuestoUsuario.
 
 
-% El tipo de juego se considera válido si coincide con la preferencia del usuario.
-tipo_valido(TipoUsuario, TipoJuego) :-
-    TipoUsuario == TipoJuego.
+% El tipo del juego debe estar entre los tipos preferidos del usuario.
+tipo_valido(TiposUsuario, TipoJuego) :-
+    member(TipoJuego, TiposUsuario).

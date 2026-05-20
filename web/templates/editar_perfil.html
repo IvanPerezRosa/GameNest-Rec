@@ -40,12 +40,25 @@
                 <label for="edad">Edad</label>
                 <input type="number" id="edad" name="edad" min="3" max="100" value="{{ usuario.edad }}" required>
 
-                <label for="plataforma_preferida">Plataforma preferida</label>
-                <select id="plataforma_preferida" name="plataforma_preferida" required>
-                    <option value="PC" {% if usuario.plataforma_preferida == "PC" %}selected{% endif %}>PC</option>
-                    <option value="PS5" {% if usuario.plataforma_preferida == "PS5" %}selected{% endif %}>PS5</option>
-                    <option value="Switch" {% if usuario.plataforma_preferida == "Switch" %}selected{% endif %}>Nintendo Switch</option>
-                </select>
+                <fieldset class="checkbox-fieldset">
+                    <legend>Plataformas disponibles</legend>
+
+                    <div class="checkbox-grid">
+                        {% for plataforma in plataformas_disponibles %}
+                            <label class="checkbox-card">
+                                <input
+                                    type="checkbox"
+                                    name="plataformas_preferidas"
+                                    value="{{ plataforma }}"
+                                    {% if plataforma in plataformas_usuario %}checked{% endif %}
+                                >
+                                <span>{{ plataforma }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+
+                    <p class="small-text">Selecciona una o varias plataformas.</p>
+                </fieldset>
 
                 <label for="presupuesto_max">Presupuesto máximo (€)</label>
                 <input type="number" id="presupuesto_max" name="presupuesto_max" min="0" step="0.01" value="{{ usuario.presupuesto_max }}" required>
@@ -70,11 +83,25 @@
                     <p class="small-text">Selecciona uno o varios géneros.</p>
                 </fieldset>
 
-                <label for="tipo_preferido">Tipo de juego preferido</label>
-                <select id="tipo_preferido" name="tipo_preferido" required>
-                    <option value="Singleplayer" {% if usuario.tipo_preferido == "Singleplayer" %}selected{% endif %}>Singleplayer</option>
-                    <option value="Multiplayer" {% if usuario.tipo_preferido == "Multiplayer" %}selected{% endif %}>Multiplayer</option>
-                </select>
+                <fieldset class="checkbox-fieldset">
+                    <legend>Tipo de juego preferido</legend>
+
+                    <div class="checkbox-grid">
+                        {% for tipo in tipos_disponibles %}
+                            <label class="checkbox-card">
+                                <input
+                                    type="checkbox"
+                                    name="tipos_preferidos"
+                                    value="{{ tipo }}"
+                                    {% if tipo in tipos_usuario %}checked{% endif %}
+                                >
+                                <span>{{ tipo }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+
+                    <p class="small-text">Puedes elegir Singleplayer, Multiplayer o ambos.</p>
+                </fieldset>
 
                 <button type="submit" class="btn btn-primary">Guardar cambios</button>
             </form>
