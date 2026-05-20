@@ -23,7 +23,7 @@
             <div class="profile-grid">
                 <p><strong>Edad:</strong> {{ usuario.edad }}</p>
                 <p><strong>Plataforma:</strong> {{ usuario.plataforma_preferida }}</p>
-                <p><strong>Género favorito:</strong> {{ usuario.genero_preferido }}</p>
+                <p><strong>Géneros favoritos:</strong> {{ usuario.generos_preferidos.replace(";", ", ") }}</p>
                 <p><strong>Tipo preferido:</strong> {{ usuario.tipo_preferido }}</p>
                 <p><strong>Presupuesto máximo:</strong> {{ usuario.presupuesto_max }} €</p>
             </div>
@@ -35,7 +35,7 @@
                     <article class="game-card">
                         <h2>{{ juego.titulo }}</h2>
 
-                        <p><strong>Género:</strong> {{ juego.genero }}</p>
+                        <p><strong>Géneros:</strong> {{ juego.generos.replace(";", ", ") }}</p>
                         <p><strong>Plataforma:</strong> {{ juego.plataforma }}</p>
                         <p><strong>PEGI:</strong> {{ juego.pegi }}</p>
                         <p><strong>Precio:</strong> {{ juego.precio }} €</p>
